@@ -23,15 +23,14 @@ import io.gatling.javaapi.http.HttpDsl.*
 import java.time.Duration
 
 fun main() {
-    // This is the main entry point for the Gatling simulation
-    // It will be executed when you run the simulation
-    val simulation = BuyProcessLoadTest()
-    simulation.run { }
+    val buyProcessLoadTest = BuyProcessLoadTest()
+    buyProcessLoadTest.run {}
 }
 
 class BuyProcessLoadTest : Simulation() {
 
-    private val token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJoZm16d2Uyc1UxT05oUFNycmVEN2FyYVpXWmJudDRLNklRNjVLbkVlRTlFIn0.eyJleHAiOjE3NDQwMTg4NzcsImlhdCI6MTc0NDAxNzA3NywianRpIjoiODIzOTU5NDItODY2MS00M2RhLWIyMGYtMDQ3ZmE1NzNhNjQwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL2tleWNsb2FrL3JlYWxtcy9NaXNhcmNoIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImI5MTY1NjMwLTQ1M2MtNGYyNS05MzFlLWZjMjQ5MzgxMmU0OCIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kIiwic2Vzc2lvbl9zdGF0ZSI6IjdjZjkwODNmLTU2MmEtNDVmZS1iMzEzLTE4NmUyNmE3N2JiNCIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1taXNhcmNoIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIiwiZW1wbG95ZWUiLCJidXllciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjdjZjkwODNmLTU2MmEtNDVmZS1iMzEzLTE4NmUyNmE3N2JiNCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkVsaWFzIE3DvGxsZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGlhc211ZWxsZXIiLCJnaXZlbl9uYW1lIjoiRWxpYXMiLCJmYW1pbHlfbmFtZSI6Ik3DvGxsZXIiLCJlbWFpbCI6ImVsaWFzQG11ZWxsZXIta2xlaW5oZWluei5kZSJ9.K2YU848-SROCkWGwSSAKmv4yvTD8oyeRjcoKEKE19guNbStGTZ1-npHuAOEjCLPC8OsswITU-gkgCeBhnZPK79QZarB53K8lh1Zgq2wFvsPyqQGxk3A6_eHwjnazTgPvck8icYH1FZb1DS6fM0rGRtmKLCCh0ottR5sXAB3PUAAiet-S9K-cdHiEqb4iDpQHVbgQgqDrY5Ykosr-IBrNm2FM8IgzDYnMzWkodEbX0ltSKeapjcdEwHh9KvcLHWfjqLpF1zK7ItdJwXTj0HD9l8cxxAQDq2JPnhrv76ebx21Tpy0bIaWVItZpW-xYzFEWUfKJP-gcGMmJnAztStAKtQ"
+    private val token =
+        "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NTRZNmxZRFBqcjB0Y2QyNVhpdTJCcFROcUJWTVIybHp1djNRUURfcHBJIn0.eyJleHAiOjE3NDQxNzk0NzksImlhdCI6MTc0NDE3NzY3OSwianRpIjoiZTljOGM2NGMtYzMyMy00MzJhLWFjNTUtMzMyOWU3YzZiMTRiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL2tleWNsb2FrL3JlYWxtcy9NaXNhcmNoIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImI0ZTg5NWRhLThkYzEtNDc2Mi1hNDFhLWEyMDg3MjZjYzI1NyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kIiwic2Vzc2lvbl9zdGF0ZSI6IjU5ZjdiYWI0LTdmMjktNDA3YS1hYThlLTI0MDEzN2E4MzUyZSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1taXNhcmNoIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIiwiZW1wbG95ZWUiLCJidXllciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjU5ZjdiYWI0LTdmMjktNDA3YS1hYThlLTI0MDEzN2E4MzUyZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkVsaWFzIE3DvGxsZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGlhc211ZWxsZXIiLCJnaXZlbl9uYW1lIjoiRWxpYXMiLCJmYW1pbHlfbmFtZSI6Ik3DvGxsZXIiLCJlbWFpbCI6ImVsaWFzQG11ZWxsZXIta2xlaW5oZWluei5kZSJ9.TXJwGmvqi2X1NJaC3ZhRxLOopESIZ8YK0TCK0dpj2XZTH4FPWq3KrcTDA45GJdoOXFvmUOmAz9WN7-deAQAd4SDa2z3JAEJJUiZK8EI1LCtzMHrTvWJ6_zvmgAvRZDyf-Q81yjfsjrW3UvKGgpbW2ku-vWuEfe-D7SyLbqOVQimv6RlXJYTT9yZFDRsRCg_zhT4Xlbwuy4ojvUfD76lXzPHu2ONQocAUYXxSnHNZwrpiQ1d1EX94fYfW8HEePDZCj5ZNV-sWiyZZbY9a0DgneeBj2ZVPw3_t32cx53FSBsoRWS3lGLw7EiAWMbVUd5eYh5ttgjbhR5DIc9rIjwP6LA"
 
     private val httpProtocol =
         http
@@ -44,7 +43,10 @@ class BuyProcessLoadTest : Simulation() {
     private val buyProcessScenario =
         scenario("Buy Process")
             .exec { session ->
-                session.set("productsQuery", "{ \"query\": \"query { products(filter: { isPubliclyVisible: true }, first: 10, orderBy: { direction: ASC, field: ID }, skip: 0) { hasNextPage nodes { id internalName isPubliclyVisible } totalCount } }\" }")
+                session.set(
+                    "productsQuery",
+                    "{ \"query\": \"query { products(filter: { isPubliclyVisible: true }, first: 10, orderBy: { direction: ASC, field: ID }, skip: 0) { hasNextPage nodes { id internalName isPubliclyVisible } totalCount } }\" }"
+                )
             }
             .exec(
                 http("products").post("/graphql")
@@ -54,24 +56,73 @@ class BuyProcessLoadTest : Simulation() {
             .pause(7)
             .exec { session ->
                 val productId = session.getString("productId")
-                session.set("productQuery", "{ \"query\": \"query { product(id: \\\"$productId\\\") { categories { hasNextPage  totalCount } defaultVariant {  id isPubliclyVisible     averageRating } id internalName isPubliclyVisible variants { hasNextPage  totalCount } } }\" }")
+                session.set(
+                    "productQuery",
+                    "{ \"query\": \"query { product(id: \\\"$productId\\\") { categories { hasNextPage  totalCount } defaultVariant { id isPubliclyVisible averageRating } id internalName isPubliclyVisible variants { hasNextPage  totalCount } } }\" }"
+                )
             }
-            .exec(http("product").post("/graphql").body(StringBody("#{productQuery}")))
+            .exec(
+                http("product").post("/graphql")
+                    .body(StringBody("#{productQuery}"))
+                    .check(jsonPath("$.data.product.defaultVariant.id").saveAs("productVariantId"))
+            )
             .pause(Duration.ofMillis(100))
             .exec { session ->
-                session.set("usersQuery", "{ \"query\": \"query { users(first: 10, orderBy: { direction: ASC, field: ID }, skip: 0) { hasNextPage nodes {  id  birthday dateJoined gender username  } totalCount } }\" }")
+                session.set(
+                    "usersQuery",
+                    "{ \"query\": \"query { users(first: 10, orderBy: { direction: ASC, field: ID }, skip: 0) { hasNextPage nodes {  id  birthday dateJoined gender username addresses { nodes { id } } } } }\" }"
+                )
             }
             .exec(
                 http("users").post("/graphql")
                     .body(StringBody("#{usersQuery}"))
-                    .check(jsonPath("$.data.users.nodes[0].id").saveAs("userId")))
+                    .check(jsonPath("$.data.users.nodes[0].addresses.nodes[0].id").saveAs("addressId"))
+                    .check(jsonPath("$.data.users.nodes[0].id").saveAs("userId"))
+            )
             .pause(Duration.ofMillis(100))
             .exec { session ->
                 val userId = session.getString("userId")
-                session.set("shoppingCartQuery", "{ \"query\": \"query { user(id: \\\"$userId\\\") { addresses { hasNextPage  totalCount } id notifications { hasNextPage  totalCount } reviews {  hasNextPage totalCount } shoppingcart { lastUpdatedAt shoppingcartItems { nodes { id productVariant { id} } } } birthday dateJoined firstName gender lastName username wishlists {  hasNextPage totalCount } } }\" }")
-            }
-            .exec(http("shoppingCart").post("/graphql").body(StringBody("#{shoppingCartQuery}")))
+                val productVariantId = session.getString("productVariantId")
+                session.set(
+                    "createShoppingcartItem",
+                    "{ \"query\": \"mutation { createShoppingcartItem( input: { id: \\\"$userId\\\" shoppingCartItem: { count: 1 productVariantId: \\\"$productVariantId\\\" } } ) { id } }\" }"
+                )
+            }.exec (
+                http("createShoppingcartItem").post("/graphql")
+                    .body(StringBody("#{createShoppingcartItem}"))
+                    .check(jsonPath("$.data.createShoppingcartItem.id").saveAs("createShoppingcartItemId"))
+            )
+    // get shipment methods
+    // get payment methods
+    // create order
+    // place order
+
+
+
     init {
-        setUp(buyProcessScenario.injectOpen(atOnceUsers(10)).protocols(httpProtocol))
+        setUp(buyProcessScenario.injectOpen(rampUsers(100).during(Duration.ofSeconds(50))).protocols(httpProtocol),)
     }
 }
+
+// TODO Real World Data for the pauses
+// TODO Fuzzing
+
+// Open Injection Patterns
+// rampUsers(100).during(Duration.ofSeconds(30))
+// constantUsersPerSec(10.0).during(Duration.ofSeconds(60))
+// rampUsersPerSec(1.0).to(10.0).during(Duration.ofSeconds(30))
+// stressPeakUsers(200)
+// heavisideUsers(100).during(Duration.ofSeconds(20)
+
+// Closed Injection Patterns
+// constantConcurrentUsers(50).during(Duration.ofMinutes(5))
+// rampConcurrentUsers(10).to(100).during(Duration.ofMinutes(10))
+
+// Combination
+// setUp(
+//    buyProcessScenario.injectOpen(
+//        atOnceUsers(10),
+//        rampUsers(50).during(Duration.ofSeconds(30)),
+//        constantUsersPerSec(20.0).during(Duration.ofMinutes(2))
+//    ).protocols(httpProtocol)
+//)
