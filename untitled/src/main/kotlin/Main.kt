@@ -30,7 +30,7 @@ fun main() {
 class BuyProcessLoadTest : Simulation() {
 
     private val token =
-        "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NTRZNmxZRFBqcjB0Y2QyNVhpdTJCcFROcUJWTVIybHp1djNRUURfcHBJIn0.eyJleHAiOjE3NDQxNzk0NzksImlhdCI6MTc0NDE3NzY3OSwianRpIjoiZTljOGM2NGMtYzMyMy00MzJhLWFjNTUtMzMyOWU3YzZiMTRiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL2tleWNsb2FrL3JlYWxtcy9NaXNhcmNoIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImI0ZTg5NWRhLThkYzEtNDc2Mi1hNDFhLWEyMDg3MjZjYzI1NyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kIiwic2Vzc2lvbl9zdGF0ZSI6IjU5ZjdiYWI0LTdmMjktNDA3YS1hYThlLTI0MDEzN2E4MzUyZSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1taXNhcmNoIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIiwiZW1wbG95ZWUiLCJidXllciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjU5ZjdiYWI0LTdmMjktNDA3YS1hYThlLTI0MDEzN2E4MzUyZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkVsaWFzIE3DvGxsZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGlhc211ZWxsZXIiLCJnaXZlbl9uYW1lIjoiRWxpYXMiLCJmYW1pbHlfbmFtZSI6Ik3DvGxsZXIiLCJlbWFpbCI6ImVsaWFzQG11ZWxsZXIta2xlaW5oZWluei5kZSJ9.TXJwGmvqi2X1NJaC3ZhRxLOopESIZ8YK0TCK0dpj2XZTH4FPWq3KrcTDA45GJdoOXFvmUOmAz9WN7-deAQAd4SDa2z3JAEJJUiZK8EI1LCtzMHrTvWJ6_zvmgAvRZDyf-Q81yjfsjrW3UvKGgpbW2ku-vWuEfe-D7SyLbqOVQimv6RlXJYTT9yZFDRsRCg_zhT4Xlbwuy4ojvUfD76lXzPHu2ONQocAUYXxSnHNZwrpiQ1d1EX94fYfW8HEePDZCj5ZNV-sWiyZZbY9a0DgneeBj2ZVPw3_t32cx53FSBsoRWS3lGLw7EiAWMbVUd5eYh5ttgjbhR5DIc9rIjwP6LA"
+        "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NTRZNmxZRFBqcjB0Y2QyNVhpdTJCcFROcUJWTVIybHp1djNRUURfcHBJIn0.eyJleHAiOjE3NDQ1Mjg2MzYsImlhdCI6MTc0NDUyNjgzNiwianRpIjoiZjdjMjRmOGQtMGY5Yi00MjhiLWJkZTYtN2M1OWMxYzNhYWJjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL2tleWNsb2FrL3JlYWxtcy9NaXNhcmNoIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImI0ZTg5NWRhLThkYzEtNDc2Mi1hNDFhLWEyMDg3MjZjYzI1NyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kIiwic2Vzc2lvbl9zdGF0ZSI6Ijg5YzQ3YWZmLTQ5OWUtNDA5YS04NjMxLTA2ZjQ3ZmUwYzcwMiIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1taXNhcmNoIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIiwiZW1wbG95ZWUiLCJidXllciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6Ijg5YzQ3YWZmLTQ5OWUtNDA5YS04NjMxLTA2ZjQ3ZmUwYzcwMiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkVsaWFzIE3DvGxsZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGlhc211ZWxsZXIiLCJnaXZlbl9uYW1lIjoiRWxpYXMiLCJmYW1pbHlfbmFtZSI6Ik3DvGxsZXIiLCJlbWFpbCI6ImVsaWFzQG11ZWxsZXIta2xlaW5oZWluei5kZSJ9.Q1fcnV77N6PSFwTZyY0WkZuxOtHw-EM_Kwx_mgzMTH0X1cwAoATF4uJVrevwC-vhG-pG6A3PtZ5sNGEfsZ3PozC3yNc5iZXUkG59msQyfUtN23-b3gJWgY1Q7NwPGmRIkc73PCCFR0bqPARoDZSM907MovnkzkkLPXGsYlXGC4rs5lrJDEhV0ibFrQp9Yvizm90Pvt3pC3VMlm_2zu3i16aD0aQuKKFI9GSGFRIBaXDwfFhv-4d1KeR-2mAC4TWMsBp9zYtwsxrLH0mZZ7xCyZkIGU2D6bT2Brbm60Q7uoYffSle95CNz0_neUjZR4ruXYK35j7bqRTY2_vPJy9Zvg"
 
     private val httpProtocol =
         http
@@ -84,23 +84,58 @@ class BuyProcessLoadTest : Simulation() {
                 val userId = session.getString("userId")
                 val productVariantId = session.getString("productVariantId")
                 session.set(
-                    "createShoppingcartItem",
+                    "createShoppingcartItemMutation",
                     "{ \"query\": \"mutation { createShoppingcartItem( input: { id: \\\"$userId\\\" shoppingCartItem: { count: 1 productVariantId: \\\"$productVariantId\\\" } } ) { id } }\" }"
                 )
-            }.exec (
-                http("createShoppingcartItem").post("/graphql")
-                    .body(StringBody("#{createShoppingcartItem}"))
+            }.exec(
+                http("createShoppingcartItemMutation").post("/graphql")
+                    .body(StringBody("#{createShoppingcartItemMutation}"))
                     .check(jsonPath("$.data.createShoppingcartItem.id").saveAs("createShoppingcartItemId"))
+            ).exec { session ->
+                session.set(
+                    "shipmentMethodsQuery",
+                    "{ \"query\": \"query { shipmentMethods { totalCount nodes { id name baseFees description feesPerItem feesPerKg } } }\" }",
+                )
+            }.exec(
+                http("shipmentMethodsQuery").post("/graphql")
+                    .body(StringBody("#{shipmentMethodsQuery}"))
+                    .check(jsonPath("$.data.shipmentMethods.nodes[0].id").saveAs("shipmentMethodId"))
+            ).exec { session ->
+                session.set(
+                    "paymentInformationsQuery",
+                    "{ \"query\": \"query { paymentInformations { nodes { id paymentMethod publicMethodDetails payments { nodes { id status totalAmount numberOfRetries payedAt } } } } }\" }",
+                )
+            }.exec(
+                http("paymentInformationsQuery").post("/graphql")
+                    .body(StringBody("#{paymentInformationsQuery}"))
+                    .check(jsonPath("$.data.paymentInformations.nodes[0].id").saveAs("paymentInformationId"))
+            ).exec { session ->
+                val userId = session.getString("userId")
+                val addressId = session.getString("addressId")
+                val createShoppingcartItemId = session.getString("createShoppingcartItemId")
+                val shipmentMethodId = session.getString("shipmentMethodId")
+                val paymentInformationId = session.getString("paymentInformationId")
+                session.set(
+                    "createOrderMutation",
+                    "{ \"query\": \"mutation { createOrder( input: { userId: \\\"$userId\\\" orderItemInputs: { shoppingCartItemId: \\\"$createShoppingcartItemId\\\" couponIds: [] shipmentMethodId: \\\"$shipmentMethodId\\\" } vatNumber: \\\"AB1234\\\" invoiceAddressId: \\\"$addressId\\\" shipmentAddressId: \\\"$addressId\\\" paymentInformationId: \\\"$paymentInformationId\\\" } ) { id paymentInformationId placedAt } }\" }"
+                )
+            }.exec(
+                http("createOrderMutation").post("/graphql")
+                    .body(StringBody("#{createOrderMutation}"))
+                    .check(jsonPath("$.data.createOrder.id").saveAs("createOrderId"))
+            ).exec { session ->
+                val createOrderId = session.getString("createOrderId")
+                session.set(
+                    "placeOrderMutation",
+                    "{ \"query\": \"mutation { placeOrder(input: { id: \\\"$createOrderId\\\", paymentAuthorization: { cvc: 123 } }) { id } }\" }"
+                )
+            }.exec(
+                http("placeOrderMutation").post("/graphql")
+                    .body(StringBody("#{placeOrderMutation}"))
             )
-    // get shipment methods
-    // get payment methods
-    // create order
-    // place order
-
-
 
     init {
-        setUp(buyProcessScenario.injectOpen(rampUsers(100).during(Duration.ofSeconds(50))).protocols(httpProtocol),)
+        setUp(buyProcessScenario.injectOpen(rampUsers(1).during(Duration.ofSeconds(10))).protocols(httpProtocol))
     }
 }
 
