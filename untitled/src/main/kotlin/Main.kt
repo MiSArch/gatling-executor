@@ -29,8 +29,7 @@ fun main() {
 
 class BuyProcessLoadTest : Simulation() {
 
-    private val token =
-        "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NTRZNmxZRFBqcjB0Y2QyNVhpdTJCcFROcUJWTVIybHp1djNRUURfcHBJIn0.eyJleHAiOjE3NDQ1Mjg2MzYsImlhdCI6MTc0NDUyNjgzNiwianRpIjoiZjdjMjRmOGQtMGY5Yi00MjhiLWJkZTYtN2M1OWMxYzNhYWJjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL2tleWNsb2FrL3JlYWxtcy9NaXNhcmNoIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImI0ZTg5NWRhLThkYzEtNDc2Mi1hNDFhLWEyMDg3MjZjYzI1NyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kIiwic2Vzc2lvbl9zdGF0ZSI6Ijg5YzQ3YWZmLTQ5OWUtNDA5YS04NjMxLTA2ZjQ3ZmUwYzcwMiIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1taXNhcmNoIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIiwiZW1wbG95ZWUiLCJidXllciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6Ijg5YzQ3YWZmLTQ5OWUtNDA5YS04NjMxLTA2ZjQ3ZmUwYzcwMiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkVsaWFzIE3DvGxsZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGlhc211ZWxsZXIiLCJnaXZlbl9uYW1lIjoiRWxpYXMiLCJmYW1pbHlfbmFtZSI6Ik3DvGxsZXIiLCJlbWFpbCI6ImVsaWFzQG11ZWxsZXIta2xlaW5oZWluei5kZSJ9.Q1fcnV77N6PSFwTZyY0WkZuxOtHw-EM_Kwx_mgzMTH0X1cwAoATF4uJVrevwC-vhG-pG6A3PtZ5sNGEfsZ3PozC3yNc5iZXUkG59msQyfUtN23-b3gJWgY1Q7NwPGmRIkc73PCCFR0bqPARoDZSM907MovnkzkkLPXGsYlXGC4rs5lrJDEhV0ibFrQp9Yvizm90Pvt3pC3VMlm_2zu3i16aD0aQuKKFI9GSGFRIBaXDwfFhv-4d1KeR-2mAC4TWMsBp9zYtwsxrLH0mZZ7xCyZkIGU2D6bT2Brbm60Q7uoYffSle95CNz0_neUjZR4ruXYK35j7bqRTY2_vPJy9Zvg"
+    private val token = System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
 
     private val httpProtocol =
         http
@@ -135,7 +134,7 @@ class BuyProcessLoadTest : Simulation() {
             )
 
     init {
-        setUp(buyProcessScenario.injectOpen(rampUsers(1).during(Duration.ofSeconds(10))).protocols(httpProtocol))
+        setUp(buyProcessScenario.injectOpen(rampUsers(100).during(Duration.ofSeconds(50))).protocols(httpProtocol))
     }
 }
 
