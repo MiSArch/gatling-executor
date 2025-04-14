@@ -29,8 +29,12 @@ fun main() {
 
 class BuyProcessLoadTest : Simulation() {
 
-    private val token = System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
-    private val baseUrl = System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
+    private val token =
+        System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
+    private val baseUrl =
+        System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
+    private val testUUID =
+        System.getenv("TEST_UUID") ?: throw IllegalStateException("Environment variable TEST_UUID is not set")
 
     private val httpProtocol =
         http
@@ -39,6 +43,19 @@ class BuyProcessLoadTest : Simulation() {
             .contentTypeHeader("application/json")
             .doNotTrackHeader("1")
             .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
+
+    private val waitForTriggerScenario =
+        scenario("Wait for Trigger")
+            .asLongAsDuring({ session ->
+                session.getString("triggerResponse") != "true"
+            }, Duration.ofSeconds(30)) // Timeout after 30s
+            .on(
+                exec(
+                    http("Check Trigger")
+                        .get("http://localhost:8888/trigger/$testUUID")
+                        .check(bodyString().saveAs("triggerResponse"))
+                ).pause(Duration.ofMillis(100))
+            )
 
     private val buyProcessScenario =
         scenario("Buy Process")
@@ -135,7 +152,10 @@ class BuyProcessLoadTest : Simulation() {
             )
 
     init {
-        setUp(buyProcessScenario.injectOpen(rampUsers(100).during(Duration.ofSeconds(50))).protocols(httpProtocol))
+        setUp(
+            waitForTriggerScenario.injectOpen(atOnceUsers(1)).andThen(
+                buyProcessScenario.injectOpen(rampUsers(100).during(Duration.ofSeconds(50))).protocols(httpProtocol)
+            ))
     }
 }
 
