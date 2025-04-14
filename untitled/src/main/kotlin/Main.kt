@@ -30,10 +30,11 @@ fun main() {
 class BuyProcessLoadTest : Simulation() {
 
     private val token = System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
+    private val baseUrl = System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
 
     private val httpProtocol =
         http
-            .baseUrl("http://localhost:8080")
+            .baseUrl(baseUrl)
             .authorizationHeader("Bearer $token")
             .contentTypeHeader("application/json")
             .doNotTrackHeader("1")
