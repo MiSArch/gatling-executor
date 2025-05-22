@@ -4,7 +4,7 @@ import io.gatling.javaapi.core.CoreDsl.atOnceUsers
 import io.gatling.javaapi.core.Simulation
 
 class MainSimulation : Simulation() {
-    private val simulation = RealisticBuyProcessLoadTest()
+    private val simulation = RampUpListLoadTest()
     init {
         setUp(
             simulation.waitForTriggerScenario.injectOpen(atOnceUsers(1)).andThen(
