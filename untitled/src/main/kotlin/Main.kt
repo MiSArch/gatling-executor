@@ -1,30 +1,7 @@
 package org.misarch
 
-import io.gatling.javaapi.core.CoreDsl.atOnceUsers
-import io.gatling.javaapi.core.Simulation
-
-class MainSimulation : Simulation() {
-    init {
-        val testClassName = System.getenv("TEST_CLASS") ?: throw IllegalStateException("Environment variable TEST_CLASS is not set")
-        println("testClassName = $testClassName")
-        val simulation: BaseMiSArchLoadTest = when (testClassName) {
-            "org.misarch.ScalabilityLoadTest" -> ScalabilityLoadTest()
-            "org.misarch.ResilienceLoadTest" -> ResilienceLoadTest()
-            "org.misarch.ElasticityLoadTest" -> ElasticityLoadTest()
-            "org.misarch.RampUpListLoadTest" -> RampUpListLoadTest()
-            else -> throw IllegalArgumentException("Unknown test class: $testClassName")
-        }
-
-        setUp(
-            simulation.waitForTriggerScenario.injectOpen(atOnceUsers(1)).andThen(
-                simulation.scenario.injectOpen(simulation.openRampSteps).protocols(simulation.httpProtocol)
-            )
-        )
-    }
-}
-
 fun main() {
-    val test = MainSimulation()
+    val test = BaseSimulation()
     test.run {}
 }
 // TODO fuzzing?

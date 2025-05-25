@@ -1,3 +1,5 @@
+import org.misarch.gradle.MetricsForwarderTask
+
 plugins {
     kotlin("jvm") version "2.1.10"
     id("io.gatling.gradle") version "3.13.5"
@@ -25,4 +27,11 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(21)
+}
+
+tasks.register<MetricsForwarderTask>("forwardMetrics") {
+    dependsOn("gatlingRun")
+    doLast {
+       forwardMetrics()
+    }
 }
