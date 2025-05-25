@@ -40,10 +40,12 @@ open class MetricsForwarderTask : DefaultTask() {
             throw RuntimeException("Failed to find the latest report directory after $maxRetries attempts.")
         }
 
+        val experimentExecutorBaseUrl =
+            System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
         val rawJs = File("build/reports/gatling/$latest/js/stats.js").readText()
         val rawHtml = File("build/reports/gatling/$latest/index.html").readText()
-        val jsUrl = "http://192.168.178.155:8888/experiment/$testUUID/gatling/metrics/stats"
-        val htmlUrl = "http://192.168.178.155:8888/experiment/$testUUID/gatling/metrics/html"
+        val jsUrl = "$experimentExecutorBaseUrl/experiment/$testUUID/gatling/metrics/stats"
+        val htmlUrl = "$experimentExecutorBaseUrl/experiment/$testUUID/gatling/metrics/html"
 
         sendHttpRequest(jsUrl, rawJs)
         sendHttpRequest(htmlUrl, rawHtml)

@@ -1,6 +1,7 @@
-package org.misarch
+package org.misarch.tests
 
 import io.gatling.javaapi.core.CoreDsl.*
+import org.misarch.common.BaseMiSArchLoadTest
 import java.io.File
 import org.misarch.scenarios.defaultScenario
 
