@@ -2,9 +2,9 @@ package org.misarch
 
 import io.gatling.javaapi.core.CoreDsl.*
 import java.io.File
-import org.misarch.scenarios.buyProcessScenario
+import org.misarch.scenarios.defaultScenario
 
-class RampUpListLoadTest : BaseMiSArchLoadTest(buyProcessScenario, openRampSteps)
+class RampUpListLoadTest : BaseMiSArchLoadTest(defaultScenario, openRampSteps)
 
 private val userSteps = readUserStepsCsv("src/main/resources/gatling-usersteps.csv")
 private val openRampSteps = userSteps.map { rampUsers(it).during(1) }
