@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: gatling-server
+server:
+  port: 8889
+experiment-executor:
+  url: "http://192.168.178.155:8888"
