@@ -1,11 +1,7 @@
-package org.misarch.common
+package org.misarch
 
 import io.gatling.javaapi.core.Simulation
 import io.gatling.javaapi.http.HttpDsl.http
-import org.misarch.tests.ElasticityLoadTest
-import org.misarch.tests.RampUpListLoadTest
-import org.misarch.tests.ResilienceLoadTest
-import org.misarch.tests.ScalabilityLoadTest
 import java.net.HttpURLConnection
 import java.net.URI
 
@@ -14,6 +10,7 @@ class BaseSimulation : Simulation() {
     private val token = System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
     private val baseUrl = System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
     private val testUUID = System.getenv("TEST_UUID") ?: throw IllegalStateException("Environment variable TEST_UUID is not set")
+    private val trigger = System.getenv("TRIGGER_DELAY")?.toLong() ?: throw IllegalStateException("Environment variable TRIGGER_DELAY is not set")
     private val experimentExecutorBaseUrl =
         System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
 
@@ -27,22 +24,12 @@ class BaseSimulation : Simulation() {
     }
 
     init {
-        val testClassName = System.getenv("TEST_CLASS") ?: throw IllegalStateException("Environment variable TEST_CLASS is not set")
-        println("testClassName = $testClassName")
-        val simulation: BaseMiSArchLoadTest = when (testClassName) {
-            "org.misarch.ScalabilityLoadTest" -> ScalabilityLoadTest()
-            "org.misarch.ResilienceLoadTest" -> ResilienceLoadTest()
-            "org.misarch.ElasticityLoadTest" -> ElasticityLoadTest()
-            "org.misarch.RampUpListLoadTest" -> RampUpListLoadTest()
-            else -> throw IllegalArgumentException("Unknown test class: $testClassName")
-        }
-
+        val simulation = ConfigurableLoad()
         setUp(simulation.scenario.injectOpen(simulation.openRampSteps).protocols(httpProtocol))
     }
 
     private fun waitForTrigger() {
-        // TODO make trigger dynamic
-        val maxAttempts = 300
+        val maxAttempts = trigger * 10
         val retryInterval = 100L
 
         println("Waiting for trigger...")

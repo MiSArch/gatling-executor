@@ -1,4 +1,4 @@
-package org.misarch.scenarios
+package org.misarch
 
 import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.http.HttpDsl.http
