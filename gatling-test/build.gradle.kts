@@ -30,8 +30,5 @@ kotlin {
 }
 
 tasks.register<MetricsForwarderTask>("forwardMetrics") {
-    dependsOn("gatlingRun")
-    doLast {
-       forwardMetrics()
-    }
+    mustRunAfter("gatlingRun")
 }
