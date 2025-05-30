@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class GatlingService(
     @Value("\${experiment-executor.url}") private val experimentExecutorUrl: String,
 ) {
+    private val runningProcesses = ConcurrentHashMap<UUID, Process>()
+
     fun executeGatlingTest(userSteps: String, testUUID: UUID, accessToken: String, triggerDelay: Long, targetUrl: String) {
         File("/gatling/src/main/resources/gatling-usersteps.csv").writeText(userSteps)
         val processBuilder = ProcessBuilder(
@@ -25,7 +28,17 @@ class GatlingService(
         processBuilder.environment()["BASE_URL"] = targetUrl
         processBuilder.environment()["TEST_UUID"] = testUUID.toString()
 
-        processBuilder.start()
+        val process = processBuilder.start()
+        runningProcesses[testUUID] = process
     }
 
+    fun stopExperiment(testUUID: UUID): Boolean {
+        val process = runningProcesses.remove(testUUID)
+        return if (process != null) {
+            process.destroy()
+            true
+        } else {
+            false
+        }
+    }
 }
