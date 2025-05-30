@@ -44,11 +44,9 @@ open class MetricsForwarderTask : DefaultTask() {
             System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
         val rawJs = File("build/reports/gatling/$latest/js/stats.js").readText()
         val rawHtml = File("build/reports/gatling/$latest/index.html").readText()
-        val jsUrl = "$experimentExecutorBaseUrl/experiment/$testUUID/gatling/metrics/stats"
-        val htmlUrl = "$experimentExecutorBaseUrl/experiment/$testUUID/gatling/metrics/html"
+        val url = "$experimentExecutorBaseUrl/experiment/$testUUID/gatling/metrics"
 
-        sendHttpRequest(jsUrl, rawJs)
-        sendHttpRequest(htmlUrl, rawHtml)
+        sendHttpRequest(url, "$rawHtml\nSPLIT_HERE\n$rawJs")
         println("Metrics forwarded successfully.")
     }
 }

@@ -29,7 +29,7 @@ class BaseSimulation : Simulation() {
     }
 
     private fun waitForTrigger() {
-        val maxAttempts = trigger * 10
+        val maxAttempts = trigger / 100
         val retryInterval = 100L
 
         println("Waiting for trigger...")
