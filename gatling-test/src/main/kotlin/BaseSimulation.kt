@@ -10,6 +10,7 @@ class BaseSimulation : Simulation() {
     private val token = System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
     private val baseUrl = System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
     private val testUUID = System.getenv("TEST_UUID") ?: throw IllegalStateException("Environment variable TEST_UUID is not set")
+    private val testVersion = System.getenv("TEST_VERSION") ?: throw IllegalStateException("Environment variable TEST_VERSION is not set")
     private val trigger = System.getenv("TRIGGER_DELAY")?.toLong() ?: throw IllegalStateException("Environment variable TRIGGER_DELAY is not set")
     private val experimentExecutorBaseUrl =
         System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
@@ -34,7 +35,7 @@ class BaseSimulation : Simulation() {
 
         println("Waiting for trigger...")
         for (i in 1..maxAttempts) {
-            val triggerResponse = getHttpRequest("$experimentExecutorBaseUrl/trigger/$testUUID")
+            val triggerResponse = getHttpRequest("$experimentExecutorBaseUrl/trigger/$testUUID/$testVersion")
             if (triggerResponse == "true") {
                 println("Trigger pulled successfully.")
                 return

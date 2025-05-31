@@ -8,8 +8,6 @@ import java.net.HttpURLConnection
 import java.net.URI
 
 open class MetricsForwarderTask : DefaultTask() {
-    private val testUUID = System.getenv("TEST_UUID")
-
     @TaskAction
     fun forwardMetrics() {
         println("Running forwardMetrics...")
@@ -40,11 +38,17 @@ open class MetricsForwarderTask : DefaultTask() {
             throw RuntimeException("Failed to find the latest report directory after $maxRetries attempts.")
         }
 
-        val experimentExecutorBaseUrl =
-            System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
+        val experimentExecutorBaseUrl = System.getenv("EXPERIMENT_EXECUTOR_URL")
+        val testUUID = System.getenv("TEST_UUID")
+        val testVersion = System.getenv("TEST_VERSION")
+
+        if (experimentExecutorBaseUrl.isNullOrEmpty() || testUUID.isNullOrEmpty() || testVersion.isNullOrEmpty()) {
+            throw RuntimeException("Environment variables EXPERIMENT_EXECUTOR_URL, TEST_UUID, or TEST_VERSION are not set.")
+        }
+
         val rawJs = File("build/reports/gatling/$latest/js/stats.js").readText()
         val rawHtml = File("build/reports/gatling/$latest/index.html").readText()
-        val url = "$experimentExecutorBaseUrl/experiment/$testUUID/gatling/metrics"
+        val url = "$experimentExecutorBaseUrl/experiment/$testUUID/$testVersion/gatling/metrics"
 
         sendHttpRequest(url, "$rawHtml\nSPLIT_HERE\n$rawJs")
         println("Metrics forwarded successfully.")
