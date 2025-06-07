@@ -12,7 +12,7 @@ class GatlingService(
 ) {
     private val runningProcesses = ConcurrentHashMap<String, Process>()
 
-    fun executeGatlingTest(userSteps: String, testUUID: UUID, testVersion: String, accessToken: String, triggerDelay: Long, targetUrl: String) {
+    fun executeGatlingTest(userSteps: String, testUUID: UUID, testVersion: String, accessToken: String, targetUrl: String) {
         File("/gatling/src/main/resources/gatling-usersteps.csv").writeText(userSteps)
         val processBuilder = ProcessBuilder(
             "bash", "-c",
@@ -24,7 +24,6 @@ class GatlingService(
 
         processBuilder.environment()["EXPERIMENT_EXECUTOR_URL"] = experimentExecutorUrl
         processBuilder.environment()["ACCESS_TOKEN"] = accessToken
-        processBuilder.environment()["TRIGGER_DELAY"] = triggerDelay.toString()
         processBuilder.environment()["BASE_URL"] = targetUrl
         processBuilder.environment()["TEST_UUID"] = testUUID.toString()
         processBuilder.environment()["TEST_VERSION"] = testVersion

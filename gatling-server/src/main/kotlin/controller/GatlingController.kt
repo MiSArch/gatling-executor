@@ -17,13 +17,12 @@ class GatlingController(
         @RequestParam testUUID: UUID,
         @RequestParam testVersion: String,
         @RequestParam accessToken: String,
-        @RequestParam triggerDelay: Long,
         @RequestParam targetUrl: String,
         @RequestBody userSteps: String,
 
      ): ResponseEntity<Unit> {
         logger.info { "Received new execution run for test $testUUID and version $testVersion" }
-        gatlingService.executeGatlingTest(userSteps, testUUID, testVersion, accessToken, triggerDelay, targetUrl)
+        gatlingService.executeGatlingTest(userSteps, testUUID, testVersion, accessToken, targetUrl)
         return ResponseEntity.accepted().body(Unit)
     }
 

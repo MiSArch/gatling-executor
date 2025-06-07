@@ -11,7 +11,6 @@ class BaseSimulation : Simulation() {
     private val baseUrl = System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
     private val testUUID = System.getenv("TEST_UUID") ?: throw IllegalStateException("Environment variable TEST_UUID is not set")
     private val testVersion = System.getenv("TEST_VERSION") ?: throw IllegalStateException("Environment variable TEST_VERSION is not set")
-    private val trigger = System.getenv("TRIGGER_DELAY")?.toLong() ?: throw IllegalStateException("Environment variable TRIGGER_DELAY is not set")
     private val experimentExecutorBaseUrl =
         System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
 
@@ -30,12 +29,16 @@ class BaseSimulation : Simulation() {
     }
 
     private fun waitForTrigger() {
-        val maxAttempts = trigger / 100
+        val maxAttempts = 6000
         val retryInterval = 100L
 
+        // Register at experiment executor
+        httpRequest("$experimentExecutorBaseUrl/trigger/$testUUID/$testVersion?client=gatling", "POST")
+
         println("Waiting for trigger...")
+
         for (i in 1..maxAttempts) {
-            val triggerResponse = getHttpRequest("$experimentExecutorBaseUrl/trigger/$testUUID/$testVersion")
+            val triggerResponse = httpRequest("$experimentExecutorBaseUrl/trigger/$testUUID/$testVersion", "GET")
             if (triggerResponse == "true") {
                 println("Trigger pulled successfully.")
                 return
@@ -43,14 +46,15 @@ class BaseSimulation : Simulation() {
             println("Waiting for trigger... Attempt $i / $maxAttempts")
             Thread.sleep(retryInterval)
         }
+        throw RuntimeException("Trigger not pulled after 1000 attempts. Aborting Experiment.")
     }
 
-    private fun getHttpRequest(url: String): String {
+    private fun httpRequest(url: String, method: String): String {
         val connection = URI(url).toURL().openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-        val responseCode = connection.responseCode
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw RuntimeException("Failed to connect to $url. Response code: $responseCode")
+        connection.requestMethod = method
+        val status = connection.responseCode
+        if (!(status == HttpURLConnection.HTTP_OK || status == HttpURLConnection.HTTP_ACCEPTED || status == HttpURLConnection.HTTP_NO_CONTENT)) {
+            throw RuntimeException("Failed to connect to $url. Response code: $status")
         }
         return connection.inputStream.bufferedReader().use { it.readText() }
     }
