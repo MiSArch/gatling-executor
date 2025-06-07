@@ -12,6 +12,29 @@ class GatlingService(
 ) {
     private val runningProcesses = ConcurrentHashMap<String, Process>()
 
+
+    fun addScenario(fileName: String, workFile: String) {
+        storeWorkFile(fileName, workFile)
+        // TODO read and update Scenarios.kt file with new scenario
+    }
+
+    fun removeScenario(fileName: String) {
+        val file = File("/gatling/src/main/kotlin/$fileName.kt")
+        if (file.exists()) {
+            file.delete()
+        } else {
+            throw IllegalArgumentException("Scenario file $fileName does not exist.")
+        }
+        // TODO read and update Scenarios.kt file to remove scenario
+    }
+
+    private fun storeWorkFile(fileName: String, workFile: String) {
+        val file = File("/gatling/src/main/kotlin/$fileName.kt")
+        file.parentFile.mkdirs() // Ensure the directory exists
+        file.writeText(workFile)
+    }
+
+
     fun executeGatlingTest(userSteps: String, testUUID: UUID, testVersion: String, accessToken: String, targetUrl: String) {
         File("/gatling/src/main/resources/gatling-usersteps.csv").writeText(userSteps)
         val processBuilder = ProcessBuilder(

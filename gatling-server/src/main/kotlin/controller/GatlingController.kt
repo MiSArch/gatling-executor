@@ -12,6 +12,16 @@ private val logger = KotlinLogging.logger {}
 class GatlingController(
     private val gatlingService: GatlingService
 ) {
+    // TODO
+    @PostMapping("/add-scenario")
+    fun addScenario(
+        @RequestParam testUUID: UUID,
+        @RequestParam testVersion: String,
+    ): ResponseEntity<Unit> {
+        logger.info { "Received new scenario for test $testUUID and version $testVersion" }
+        return ResponseEntity.accepted().body(Unit)
+    }
+
     @PostMapping("/start-experiment")
      fun getGatlingData(
         @RequestParam testUUID: UUID,

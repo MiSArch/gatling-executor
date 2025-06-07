@@ -28,7 +28,6 @@ dependencies {
     implementation("io.netty:netty-resolver-dns-native-macos:4.1.119.Final:osx-aarch_64")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("io.github.oshai:kotlin-logging-jvm:7.0.5")
-
 }
 
 kotlin {

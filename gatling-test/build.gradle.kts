@@ -13,13 +13,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
     implementation("io.gatling:gatling-core:3.13.5")
     implementation("io.gatling:gatling-core-java:3.13.5")
     implementation("io.gatling:gatling-http-java:3.13.5")
     implementation("io.gatling:gatling-app:3.13.5")
-    testImplementation("io.gatling.highcharts:gatling-charts-highcharts:3.13.5")
-    testImplementation("io.gatling:gatling-recorder:3.13.5")
 }
 
 tasks.test {

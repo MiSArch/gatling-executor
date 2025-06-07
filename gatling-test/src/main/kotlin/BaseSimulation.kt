@@ -1,7 +1,9 @@
 package org.misarch
 
+import io.gatling.javaapi.core.CoreDsl.rampUsers
 import io.gatling.javaapi.core.Simulation
 import io.gatling.javaapi.http.HttpDsl.http
+import java.io.File
 import java.net.HttpURLConnection
 import java.net.URI
 
@@ -24,8 +26,12 @@ class BaseSimulation : Simulation() {
     }
 
     init {
-        val simulation = ConfigurableLoad()
-        setUp(simulation.scenario.injectOpen(simulation.openRampSteps).protocols(httpProtocol))
+        val userSteps = File("src/main/resources/gatling-usersteps.csv").readLines().mapNotNull { it.trim().toIntOrNull() }
+        val scenarioSetups = scenarios.mapNotNull { (scenario, weight) ->
+            val scaledSteps = userSteps.map { stepUsers -> rampUsers((stepUsers * weight).toInt()).during(1) }
+            scenario.injectOpen(scaledSteps).protocols(httpProtocol)
+        }
+        setUp(scenarioSetups)
     }
 
     private fun waitForTrigger() {
@@ -59,25 +65,3 @@ class BaseSimulation : Simulation() {
         return connection.inputStream.bufferedReader().use { it.readText() }
     }
 }
-
-// TODO fuzzing?
-
-// Open Injection Patterns
-// rampUsers(100).during(Duration.ofSeconds(30))
-// constantUsersPerSec(10.0).during(Duration.ofSeconds(60))
-// rampUsersPerSec(1.0).to(10.0).during(Duration.ofSeconds(30))
-// stressPeakUsers(200)
-// heavisideUsers(100).during(Duration.ofSeconds(20)
-
-// Closed Injection Patterns
-// constantConcurrentUsers(50).during(Duration.ofMinutes(5))
-// rampConcurrentUsers(10).to(100).during(Duration.ofMinutes(10))
-
-// Combination
-// setUp(
-//    buyProcessScenario.injectOpen(
-//        atOnceUsers(10),
-//        rampUsers(50).during(Duration.ofSeconds(30)),
-//        constantUsersPerSec(20.0).during(Duration.ofMinutes(2))
-//    ).protocols(httpProtocol)
-//)

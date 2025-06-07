@@ -4,7 +4,7 @@ import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.http.HttpDsl.http
 import java.time.Duration
 
-val defaultScenario = scenario("Buy Process").exec { session ->
+val buyProcessScenario = scenario("Buy Process").exec { session ->
     session.set(
         "productsQuery",
         "{ \"query\": \"query { products(filter: { isPubliclyVisible: true }, first: 10, orderBy: { direction: ASC, field: ID }, skip: 0) { hasNextPage nodes { id internalName isPubliclyVisible } totalCount } }\" }"
