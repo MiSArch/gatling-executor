@@ -26,9 +26,9 @@ class BaseSimulation : Simulation() {
     }
 
     init {
-        val userSteps = File("src/main/resources/gatling-usersteps.csv").readLines().mapNotNull { it.trim().toIntOrNull() }
-        val scenarioSetups = scenarios.mapNotNull { (scenario, weight) ->
-            val scaledSteps = userSteps.map { stepUsers -> rampUsers((stepUsers * weight).toInt()).during(1) }
+        val scenarioSetups = scenarios.mapNotNull { (scenario, name) ->
+            val userSteps = File("src/main/resources/$name.csv").readLines().mapNotNull { it.trim().toIntOrNull() }
+            val scaledSteps = userSteps.map { stepUsers -> rampUsers(stepUsers).during(1) }
             scenario.injectOpen(scaledSteps).protocols(httpProtocol)
         }
         setUp(scenarioSetups)
