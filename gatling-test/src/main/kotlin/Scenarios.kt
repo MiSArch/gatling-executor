@@ -1,7 +1,6 @@
 package org.misarch
 
+import io.gatling.javaapi.core.ScenarioBuilder
 
-val scenarios = mapOf(
-    buyProcessScenario to "usersteps_buyProcessScenario",
-    abortedBuyProcessScenario to "usersteps_abortedBuyProcessScenario"
-)
+// This will be set dynamically by the Gatling service
+val scenarios = mapOf<ScenarioBuilder, String>()

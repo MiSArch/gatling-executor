@@ -27,7 +27,7 @@ class BaseSimulation : Simulation() {
 
     init {
         val scenarioSetups = scenarios.mapNotNull { (scenario, name) ->
-            val userSteps = File("src/main/resources/$name.csv").readLines().mapNotNull { it.trim().toIntOrNull() }
+            val userSteps = File("src/main/resources/$name").readLines().mapNotNull { it.trim().toIntOrNull() }
             val scaledSteps = userSteps.map { stepUsers -> rampUsers(stepUsers).during(1) }
             scenario.injectOpen(scaledSteps).protocols(httpProtocol)
         }

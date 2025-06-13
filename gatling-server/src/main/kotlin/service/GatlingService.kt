@@ -1,42 +1,43 @@
 package org.misarch.gatlingserver.service
 
+import org.misarch.gatlingserver.controller.model.EncodedFileDTO
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Service
+@OptIn(ExperimentalEncodingApi::class)
 class GatlingService(
     @Value("\${experiment-executor.url}") private val experimentExecutorUrl: String,
 ) {
     private val runningProcesses = ConcurrentHashMap<String, Process>()
 
+    fun executeGatlingTest(gatlingConfigs: List<EncodedFileDTO>, testUUID: UUID, testVersion: String, accessToken: String, targetUrl: String) {
 
-    fun addScenario(fileName: String, workFile: String) {
-        storeWorkFile(fileName, workFile)
-        // TODO read and update Scenarios.kt file with new scenario
-    }
-
-    fun removeScenario(fileName: String) {
-        val file = File("/gatling/src/main/kotlin/$fileName.kt")
-        if (file.exists()) {
-            file.delete()
-        } else {
-            throw IllegalArgumentException("Scenario file $fileName does not exist.")
+        gatlingConfigs.forEach { config ->
+            val decodedWorkContent = Base64.decode(config.encodedWorkFileContent).decodeToString()
+            val decodedUserStepsContent = Base64.decode(config.encodedUserStepsFileContent).decodeToString()
+            File("/gatling/src/main/kotlin/${config.fileName}.kt").writeText(decodedWorkContent)
+            File("/gatling/src/main/resources/${config.fileName}.csv").writeText(decodedUserStepsContent)
         }
-        // TODO read and update Scenarios.kt file to remove scenario
-    }
 
-    private fun storeWorkFile(fileName: String, workFile: String) {
-        val file = File("/gatling/src/main/kotlin/$fileName.kt")
-        file.parentFile.mkdirs() // Ensure the directory exists
-        file.writeText(workFile)
-    }
+        val scenarios = gatlingConfigs.joinToString(",\n") { config ->
+            "${config.fileName} to \"${config.fileName}.csv\""
+        }
 
+        File("/gatling/src/main/kotlin/Scenarios.kt").writeText("""
+            package org.misarch
 
-    fun executeGatlingTest(userSteps: String, testUUID: UUID, testVersion: String, accessToken: String, targetUrl: String) {
-        File("/gatling/src/main/resources/gatling-usersteps.csv").writeText(userSteps)
+            val scenarios = mapOf(
+                $scenarios
+            )
+            """.trimIndent()
+        )
+
         val processBuilder = ProcessBuilder(
             "bash", "-c",
             "/gatling/gradlew gatlingRun forwardMetrics"
