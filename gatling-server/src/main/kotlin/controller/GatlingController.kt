@@ -17,13 +17,11 @@ class GatlingController(
      fun getGatlingData(
         @RequestParam testUUID: UUID,
         @RequestParam testVersion: String,
-        @RequestParam accessToken: String,
-        @RequestParam targetUrl: String,
         @RequestBody gatlingConfigs: List<EncodedFileDTO>,
 
      ): ResponseEntity<Unit> {
         logger.info { "Received new execution run for test $testUUID and version $testVersion" }
-        gatlingService.executeGatlingTest(gatlingConfigs, testUUID, testVersion, accessToken, targetUrl)
+        gatlingService.executeGatlingTest(gatlingConfigs, testUUID, testVersion)
         return ResponseEntity.accepted().body(Unit)
     }
 

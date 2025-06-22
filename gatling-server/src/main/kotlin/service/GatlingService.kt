@@ -16,7 +16,7 @@ class GatlingService(
 ) {
     private val runningProcesses = ConcurrentHashMap<String, Process>()
 
-    fun executeGatlingTest(gatlingConfigs: List<EncodedFileDTO>, testUUID: UUID, testVersion: String, accessToken: String, targetUrl: String) {
+    fun executeGatlingTest(gatlingConfigs: List<EncodedFileDTO>, testUUID: UUID, testVersion: String) {
 
         gatlingConfigs.forEach { config ->
             val decodedWorkContent = Base64.decode(config.encodedWorkFileContent).decodeToString()
@@ -47,8 +47,6 @@ class GatlingService(
             .redirectError(ProcessBuilder.Redirect.INHERIT)
 
         processBuilder.environment()["EXPERIMENT_EXECUTOR_URL"] = experimentExecutorUrl
-        processBuilder.environment()["ACCESS_TOKEN"] = accessToken
-        processBuilder.environment()["BASE_URL"] = targetUrl
         processBuilder.environment()["TEST_UUID"] = testUUID.toString()
         processBuilder.environment()["TEST_VERSION"] = testVersion
 

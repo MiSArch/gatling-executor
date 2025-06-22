@@ -1,0 +1,40 @@
+import io.gatling.javaapi.core.CoreDsl.*
+import io.gatling.javaapi.http.HttpDsl.http
+import java.time.Duration
+import java.util.UUID
+
+val loginScenario = scenario("loginScenario")
+    .exec { session ->
+        val state = UUID.randomUUID().toString()
+        val nonce = UUID.randomUUID().toString()
+        session
+            .set("state", state)
+            .set("nonce", nonce)
+    }
+    .exec(
+        http("Load OIDC Auth Page")
+            .httpRequest("GET", "http://localhost:4000/keycloak/realms/Misarch/protocol/openid-connect/auth")
+            .queryParam("client_id", "frontend")
+            .queryParam("redirect_uri", "/")
+            .queryParam("state", "#{state}")
+            .queryParam("response_mode", "fragment")
+            .queryParam("response_type", "code")
+            .queryParam("scope", "openid")
+            .queryParam("nonce", "#{nonce}")
+            .check(css("form#kc-form-login", "action").saveAs("loginAction"),)
+    )
+    .pause(Duration.ofMillis(500), Duration.ofMillis(1500))
+    .exec { session ->
+        session
+    }
+    .exec(
+        http("Submit Keycloak Login")
+            .httpRequest("POST", "#{loginAction}")
+            .formParam("username", "gatling")
+            .formParam("password", "123")
+            .formParam("credentialId", "")
+            .check(
+                bodyString().saveAs("fullHtmlResponse"),
+            )
+    )
+    .pause(Duration.ofMillis(0), Duration.ofMillis(0))

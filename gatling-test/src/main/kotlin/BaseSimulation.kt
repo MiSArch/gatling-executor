@@ -9,16 +9,12 @@ import java.net.URI
 
 class BaseSimulation : Simulation() {
 
-    private val token = System.getenv("ACCESS_TOKEN") ?: throw IllegalStateException("Environment variable ACCESS_TOKEN is not set")
-    private val baseUrl = System.getenv("BASE_URL") ?: throw IllegalStateException("Environment variable BASE_URL is not set")
     private val testUUID = System.getenv("TEST_UUID") ?: throw IllegalStateException("Environment variable TEST_UUID is not set")
     private val testVersion = System.getenv("TEST_VERSION") ?: throw IllegalStateException("Environment variable TEST_VERSION is not set")
     private val experimentExecutorBaseUrl =
         System.getenv("EXPERIMENT_EXECUTOR_URL") ?: throw IllegalStateException("Environment variable EXPERIMENT_EXECUTOR_URL is not set")
 
-    private val httpProtocol = http.baseUrl(baseUrl).authorizationHeader("Bearer $token").contentTypeHeader("application/json").doNotTrackHeader("1")
-        .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
-
+    private val httpProtocol = http.userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
     override fun before() {
         waitForTrigger()
