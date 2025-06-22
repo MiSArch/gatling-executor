@@ -10,7 +10,11 @@ val buyProcessScenario = scenario("buyProcessScenario")
     }
     .exec(
         http("Get Access Token")
-            .post("http://keycloak:80/keycloak/realms/Misarch/protocol/openid-connect/token?client_id=frontend&grant_type=password&username=gatling&password=123")
+                        .post("http://keycloak:80/keycloak/realms/Misarch/protocol/openid-connect/token")
+                        .formParam("client_id", "frontend")
+                        .formParam("grant_type", "password")
+                        .formParam("username", "gatling")
+                        .formParam("password", "123")
             .check(jsonPath("$.access_token").saveAs("accessToken"))
     )
     .pause(Duration.ofMillis(0), Duration.ofMillis(0))
