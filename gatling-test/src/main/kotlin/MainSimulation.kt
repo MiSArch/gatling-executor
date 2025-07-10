@@ -7,7 +7,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URI
 
-class BaseSimulation : Simulation() {
+class MainSimulation : Simulation() {
 
     private val testUUID = System.getenv("TEST_UUID") ?: throw IllegalStateException("Environment variable TEST_UUID is not set")
     private val testVersion = System.getenv("TEST_VERSION") ?: throw IllegalStateException("Environment variable TEST_VERSION is not set")

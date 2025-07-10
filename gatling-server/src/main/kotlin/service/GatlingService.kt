@@ -16,7 +16,17 @@ class GatlingService(
 ) {
     private val runningProcesses = ConcurrentHashMap<String, Process>()
 
-    fun executeGatlingTest(gatlingConfigs: List<EncodedFileDTO>, testUUID: UUID, testVersion: String) {
+    fun executeGatlingTest(
+        gatlingConfigs: List<EncodedFileDTO>,
+        testUUID: UUID,
+        testVersion: String,
+        warmUp: Boolean,
+        warmUpRate: Int,
+        warmUpDuration: Int,
+        steadyState: Boolean,
+        steadyStateRate: Int,
+        steadyStateDuration: Int,
+    ) {
 
         gatlingConfigs.forEach { config ->
             val decodedWorkContent = Base64.decode(config.encodedWorkFileContent).decodeToString()
@@ -38,10 +48,14 @@ class GatlingService(
             """.trimIndent()
         )
 
-        val processBuilder = ProcessBuilder(
-            "bash", "-c",
-            "/gatling/gradlew gatlingRun forwardMetrics"
-        )
+        val gradleString = when {
+            warmUp && steadyState -> "warmUp steadyState steadyStateForwardMetrics mainSimulation mainForwardMetrics"
+            warmUp -> "warmUp mainSimulation mainForwardMetrics"
+            steadyState -> "steadyState steadyStateForwardMetrics mainSimulation mainForwardMetrics"
+            else -> "mainSimulation mainForwardMetrics"
+        }
+
+        val processBuilder = ProcessBuilder("bash", "-c", "/gatling/gradlew $gradleString")
             .directory(File("/gatling"))
             .redirectOutput(ProcessBuilder.Redirect.INHERIT)
             .redirectError(ProcessBuilder.Redirect.INHERIT)
@@ -49,6 +63,10 @@ class GatlingService(
         processBuilder.environment()["EXPERIMENT_EXECUTOR_URL"] = experimentExecutorUrl
         processBuilder.environment()["TEST_UUID"] = testUUID.toString()
         processBuilder.environment()["TEST_VERSION"] = testVersion
+        processBuilder.environment()["WARM_UP_RATE"] = warmUpRate.toString()
+        processBuilder.environment()["WARM_UP_DURATION"] = warmUpDuration.toString()
+        processBuilder.environment()["STEADY_STATE_RATE"] = steadyStateRate.toString()
+        processBuilder.environment()["STEADY_STATE_DURATION"] = steadyStateDuration.toString()
 
         val process = processBuilder.start()
         runningProcesses["$testUUID:$testVersion"] = process

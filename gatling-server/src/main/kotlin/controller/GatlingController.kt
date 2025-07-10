@@ -14,14 +14,29 @@ class GatlingController(
     private val gatlingService: GatlingService
 ) {
     @PostMapping("/start-experiment")
-     fun getGatlingData(
+    fun getGatlingData(
         @RequestParam testUUID: UUID,
         @RequestParam testVersion: String,
+        @RequestParam(required = false, defaultValue = "false") warmUp: Boolean,
+        @RequestParam(required = false, defaultValue = "false") steadyState: Boolean,
+        @RequestParam(required = false, defaultValue = "0") warmUpRate: Int,
+        @RequestParam(required = false, defaultValue = "0") warmUpDuration: Int,
+        @RequestParam(required = false, defaultValue = "0") steadyStateRate: Int,
+        @RequestParam(required = false, defaultValue = "0") steadyStateDuration: Int,
         @RequestBody gatlingConfigs: List<EncodedFileDTO>,
-
-     ): ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
         logger.info { "Received new execution run for test $testUUID and version $testVersion" }
-        gatlingService.executeGatlingTest(gatlingConfigs, testUUID, testVersion)
+        gatlingService.executeGatlingTest(
+            gatlingConfigs,
+            testUUID,
+            testVersion,
+            warmUp,
+            warmUpRate,
+            warmUpDuration,
+            steadyState,
+            steadyStateRate,
+            steadyStateDuration
+        )
         return ResponseEntity.accepted().body(Unit)
     }
 
