@@ -24,8 +24,12 @@ class MainSimulation : Simulation() {
     init {
         val scenarioSetups = scenarios.mapNotNull { (scenario, name) ->
             val userSteps = File("src/main/resources/$name").readLines().mapNotNull { it.trim().toIntOrNull() }
-            // val scaledSteps = userSteps.map { stepUsers -> rampUsers(stepUsers).during(1) }
-            val scaledSteps = userSteps.chunked(60).map { chunk -> rampUsers(chunk.sum()).during(60) }
+            // For short tests, keep the granularity of 1 second, otherwise aggregate to 1 minute
+            val scaledSteps = if (userSteps.size <= 3600) {
+                userSteps.map { stepUsers -> rampUsers(stepUsers).during(1) }
+            } else {
+                userSteps.chunked(60).map { chunk -> rampUsers(chunk.sum()).during(60) }
+            }
             scenario.injectOpen(scaledSteps).protocols(httpProtocol)
         }
         setUp(scenarioSetups)
