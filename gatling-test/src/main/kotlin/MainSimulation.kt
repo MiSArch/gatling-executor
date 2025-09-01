@@ -24,7 +24,8 @@ class MainSimulation : Simulation() {
     init {
         val scenarioSetups = scenarios.mapNotNull { (scenario, name) ->
             val userSteps = File("src/main/resources/$name").readLines().mapNotNull { it.trim().toIntOrNull() }
-            val scaledSteps = userSteps.map { stepUsers -> rampUsers(stepUsers).during(1) }
+            // val scaledSteps = userSteps.map { stepUsers -> rampUsers(stepUsers).during(1) }
+            val scaledSteps = userSteps.chunked(60).map { chunk -> rampUsers(chunk.sum()).during(60) }
             scenario.injectOpen(scaledSteps).protocols(httpProtocol)
         }
         setUp(scenarioSetups)
