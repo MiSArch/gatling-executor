@@ -1,6 +1,6 @@
 # Gatling Executor
 
-The Gatling Executor is a component of the MiSArch Experiment Tool and is responsible for executing Gatling executions defined in an experiment.
+The Gatling Executor is a component of Ceres and is responsible for executing Gatling executions defined in an experiment.
 It provides a REST API to trigger Gatling executions.
 
 ## Documentation
